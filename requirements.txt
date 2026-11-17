@@ -1,0 +1,6 @@
+PyYAML
+numpy
+requests
+beautifulsoup4
+sentence-transformers  # retrieve.py and pick_next.py (semantic search)
+pypdf                  # optional: read_source.py pdf

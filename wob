@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Wrapper that sets per-agent env vars and forwards to the shared tool layer.
+set -e
+HERE="$(cd "$(dirname "$0")" && pwd)"
+# Load the agent's .env so WOB_VAULT_ROOT, WOB_PEER_VAULT, etc. are exported.
+if [ -f "$HERE/.env" ]; then
+  set -a
+  . "$HERE/.env"
+  set +a
+fi
+export WOB_ENV_FILE="$HERE/.env"
+TOOL="${1:-}"
+if [ -z "$TOOL" ] || [ "$TOOL" = "-h" ] || [ "$TOOL" = "--help" ]; then
+  cat <<HLP
+usage: ./wob <tool> [args...]
+
+Available tools:
+  vault_ops        CRUD + schema validation + link graph
+  read_source      fetch URL/PDF into .tmp/sources/
+  retrieve         semantic search over this vault
+  pick_next        score open questions, choose what to read next
+  coherence_check  flag orphans, tensions, staleness
+  daily_digest     compile today's work into a digest
+  credit_meter     check/record token budget
+  pause            let the agent pause/resume its own loop
+  peer_read        (paired agents) read-only access to peer's vault
+  dashboard        local web view of every agent found under --scan-root
+
+The agent is: ${WOB_AGENT_NAME:-unknown}
+Vault: ${WOB_VAULT_ROOT:-unset}
+Peer:  ${WOB_PEER_NAME:-none} at ${WOB_PEER_VAULT:-none}
+HLP
+  exit 0
+fi
+shift
+exec python3 "$HERE/tools/${TOOL}.py" "$@"

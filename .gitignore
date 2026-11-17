@@ -1,0 +1,26 @@
+# secrets and local state
+.env
+.env.*
+!.env.example
+**/.credit_ledger.json
+**/.credit_ledger.json.tmp
+/vault/_pause.md
+.claude/
+.planning/
+
+# scratch: fetched source texts and PDFs (third-party copyrighted material)
+.tmp/
+*.pdf
+
+# personal course notes (not part of the project)
+*.docx
+
+# generated embedding index (rebuild with ./wob retrieve embed)
+vault/_index/embeddings.npz
+vault/_index/embeddings_meta.json
+
+# python + OS
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
